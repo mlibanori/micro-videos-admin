@@ -1,11 +1,11 @@
-import { Uuid } from "../uuid.vo";
+import { InvalidUuidError, Uuid } from "../uuid.vo";
 import { validate as uuidValidate } from "uuid";
 
 describe("UUID Value Object Unit Test", () => {
   const validateSpy = jest.spyOn(Uuid.prototype as any, "validate");
 
   test("Should throw an error if UUID is invalid", () => {
-    expect(() => new Uuid("invalid-uuid")).toThrow("ID must be a valid UUID");
+    expect(() => new Uuid("invalid-uuid")).toThrow(new InvalidUuidError());
     expect(validateSpy).toHaveBeenCalledTimes(1);
   });
 
