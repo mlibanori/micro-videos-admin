@@ -15,6 +15,7 @@
 	// connected. This is typically a file mount in .devcontainer/docker-compose.yml
 	"workspaceFolder": "/home/node/app",
 	"features": {
+			"ghcr.io/devcontainers/features/github-cli:1": {}, 
 			"ghcr.io/devcontainers/features/common-utils:2": {},
 			"ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {
 					"plugins": "git git-flow F-Sy-H zsh-autosuggestions zsh-completions",
