@@ -1,4 +1,6 @@
-import { Uuid } from "../../shared/value-objects/uuid.vo";
+import { EntityValidationError } from "../../shared/domain/validation.error";
+import { Uuid } from "../../shared/domain/value-objects/uuid.vo";
+import { CategoryValidatorFactory } from "./category.validator";
 
 export type CategoryConstructorProps = {
   category_id?: Uuid;
@@ -31,15 +33,19 @@ export class Category {
   }
 
   static create(props: CategoryCreateCommand): Category {
-    return new Category(props);
+    const category = new Category(props);
+    category.validate();
+    return category;
   }
 
   changeName(name: string): void {
     this.name = name;
+    this.validate();
   }
 
   changeDescription(description: string): void {
     this.description = description;
+    this.validate();
   }
 
   activate(): void {
@@ -48,6 +54,15 @@ export class Category {
 
   deactivate(): void {
     this.is_active = false;
+  }
+
+  validate(): boolean {
+    const validator = CategoryValidatorFactory.create();
+    const isValid = validator.validate(this);
+    if (!isValid) {
+      throw new EntityValidationError(validator.errors);
+    }
+    return isValid;
   }
 
   toJSON() {

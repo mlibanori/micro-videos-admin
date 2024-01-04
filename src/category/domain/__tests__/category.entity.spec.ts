@@ -1,7 +1,12 @@
-import { Uuid } from "../../../shared/value-objects/uuid.vo";
+import { Uuid } from "../../../shared/domain/value-objects/uuid.vo";
 import { Category } from "../category.entity";
 
 describe("Category Unit Test", () => {
+  let validateSpy: any;
+  beforeEach(() => {
+    validateSpy = jest.spyOn(Category.prototype, "validate");
+  });
+
   test("Should create a category with name field only", () => {
     const category = new Category({
       name: "Movie",
@@ -50,6 +55,7 @@ describe("Category Unit Test", () => {
     expect(category.description).toBe("Movie description");
     expect(category.is_active).toBeFalsy();
     expect(category.created_at).toBeInstanceOf(Date);
+    expect(validateSpy).toHaveBeenCalledTimes(1);
   });
 
   test("Should change name", () => {
@@ -60,6 +66,7 @@ describe("Category Unit Test", () => {
     });
     category.changeName("Movie 2");
     expect(category.name).toBe("Movie 2");
+    expect(validateSpy).toHaveBeenCalledTimes(2);
   });
 
   test("Should change description", () => {
@@ -70,6 +77,7 @@ describe("Category Unit Test", () => {
     });
     category.changeDescription("Movie description 2");
     expect(category.description).toBe("Movie description 2");
+    expect(validateSpy).toHaveBeenCalledTimes(2);
   });
 
   test("Should activate category", () => {
@@ -90,6 +98,7 @@ describe("Category Unit Test", () => {
     });
     category.deactivate();
     expect(category.is_active).toBeFalsy();
+    expect(validateSpy).toHaveBeenCalledTimes(1);
   });
 
   test("Should return a JSON", () => {
@@ -107,5 +116,55 @@ describe("Category Unit Test", () => {
       is_active: true,
       created_at: date,
     });
+  });
+});
+
+describe("Category Validator Unit Test", () => {
+  describe("create command", () => {
+    test.each([
+      [
+        null,
+        [
+          "name should not be empty",
+          "name must be a string",
+          "name must be shorter than or equal to 255 characters",
+        ],
+      ],
+      ["", ["name should not be empty"]],
+      [
+        "a".repeat(256),
+        ["name must be shorter than or equal to 255 characters"],
+      ],
+    ])(
+      "Should return invalid category with name property",
+      (name, expectedErrorMessages) => {
+        expect(() => Category.create({ name })).containsErrorMessages({
+          name: expectedErrorMessages,
+        });
+      }
+    );
+
+    test("Should return invalid category with description property", () => {
+      expect(() =>
+        Category.create({ name: "kk", description: 123 as any })
+      ).containsErrorMessages({
+        description: ["description must be a string"],
+      });
+    });
+
+    test.each([
+      ["active", ["is_active must be a boolean value"]],
+      [null, ["is_active must be a boolean value"]],
+      [undefined, ["is_active must be a boolean value"]],
+    ])(
+      "Should return invalid category with is_active property",
+      (is_active, expectedErrorMessages) => {
+        expect(() =>
+          Category.create({ name: "name", is_active: is_active as any })
+        ).containsErrorMessages({
+          is_active: expectedErrorMessages,
+        });
+      }
+    );
   });
 });
