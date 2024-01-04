@@ -21,4 +21,9 @@ describe("UUID Value Object Unit Test", () => {
     expect(uuid.id).toBe("a3e0c1b9-3e3b-4a4c-8a1d-1c7b7f987bd1");
     expect(validateSpy).toHaveBeenCalledTimes(1);
   });
+
+  test("Should convert UUID to string", () => {
+    const uuid = new Uuid("a3e0c1b9-3e3b-4a4c-8a1d-1c7b7f987bd1");
+    expect(uuid.toString()).toBe("a3e0c1b9-3e3b-4a4c-8a1d-1c7b7f987bd1");
+  });
 });

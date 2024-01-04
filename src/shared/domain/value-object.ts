@@ -11,4 +11,6 @@ export abstract class ValueObject {
 
     return isEqual(vo, this);
   }
+
+  abstract toString(): string;
 }
