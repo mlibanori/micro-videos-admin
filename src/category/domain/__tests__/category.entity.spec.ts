@@ -17,6 +17,15 @@ describe("Category Unit Test", () => {
     expect(category.created_at).toBeInstanceOf(Date);
   });
 
+  test("Should throw an error if UUID is invalid", () => {
+    expect(() => {
+      new Category({
+        category_id: new Uuid("invalid-uuid"),
+        name: "Movie",
+      });
+    }).toThrow();
+  });
+
   test("Should create a category with name and description field", () => {
     const category = new Category({
       name: "Movie",
@@ -116,6 +125,15 @@ describe("Category Unit Test", () => {
       is_active: true,
       created_at: date,
     });
+  });
+
+  test("Should return entity_id", () => {
+    const category = Category.create({
+      name: "Movie",
+      description: "Movie description",
+      is_active: true,
+    });
+    expect(category.entity_id).toEqual(category.category_id);
   });
 });
 
