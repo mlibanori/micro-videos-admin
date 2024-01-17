@@ -1,0 +1,76 @@
+import { SearchParams, SearchParamsConstructorProps } from "../search-params";
+
+describe("SearchParams Unit Tests", () => {
+  let arrange: [SearchParamsConstructorProps, SearchParamsConstructorProps][] =
+    [
+      [{ page: null }, { page: 1 }],
+      [{ page: undefined }, { page: 1 }],
+      [{ page: "" as any }, { page: 1 }],
+      [{ page: "fake" as any }, { page: 1 }],
+      [{ page: 0 }, { page: 1 }],
+      [{ page: -1 }, { page: 1 }],
+      [{ page: 5.5 }, { page: 1 }],
+      [{ page: true as any }, { page: 1 }],
+      [{ page: false as any }, { page: 1 }],
+      [{ page: {} as any }, { page: 1 }],
+      [{ page: 1 }, { page: 1 }],
+      [{ page: 2 }, { page: 2 }],
+      [{ per_page: null }, { per_page: 15 }],
+      [{ per_page: undefined }, { per_page: 15 }],
+      [{ per_page: "" as any }, { per_page: 15 }],
+      [{ per_page: "fake" as any }, { per_page: 15 }],
+      [{ per_page: 0 }, { per_page: 15 }],
+      [{ per_page: -1 }, { per_page: 15 }],
+      [{ per_page: 5.5 }, { per_page: 15 }],
+      [{ per_page: true as any }, { per_page: 15 }],
+      [{ per_page: false as any }, { per_page: 15 }],
+      [{ per_page: {} as any }, { per_page: 15 }],
+      [{ per_page: 1 }, { per_page: 1 }],
+      [{ per_page: 2 }, { per_page: 2 }],
+      [{ per_page: 10 }, { per_page: 10 }],
+      [{ sort: null }, { sort: null }],
+      [{ sort: undefined }, { sort: null }],
+      [{ sort: "" }, { sort: null }],
+      [{ sort: 0 as any }, { sort: "0" }],
+      [{ sort: -1 as any }, { sort: "-1" }],
+      [{ sort: 5.5 as any }, { sort: "5.5" }],
+      [{ sort: true as any }, { sort: "true" }],
+      [{ sort: false as any }, { sort: "false" }],
+      [{ sort: {} as any }, { sort: "[object Object]" }],
+      [{ sort: "field" }, { sort: "field" }],
+      [{ sort_dir: null }, { sort_dir: null }],
+      [{ sort_dir: undefined }, { sort_dir: null }],
+      [{ sort_dir: "" as any }, { sort_dir: null }],
+      [{ sort_dir: 0 as any }, { sort_dir: null }],
+      [{ sort_dir: "fake" as any }, { sort_dir: null }],
+      [{ sort_dir: "asc" }, { sort_dir: null }],
+      [{ sort_dir: "ASC" as any }, { sort_dir: null }],
+      [{ sort_dir: "desc" }, { sort_dir: null }],
+      [{ sort_dir: "DESC" as any }, { sort_dir: null }],
+      [{ sort: "field", sort_dir: true as any }, { sort_dir: "asc" }],
+      [{ sort: "field", sort_dir: false as any }, { sort_dir: "asc" }],
+      [{ sort: "field", sort_dir: "fake" as any }, { sort_dir: "asc" }],
+      [{ sort: "field", sort_dir: "asc" as any }, { sort_dir: "asc" }],
+      [{ sort: "field", sort_dir: "ASC" as any }, { sort_dir: "asc" }],
+      [{ sort: "field", sort_dir: "desc" as any }, { sort_dir: "desc" }],
+      [{ sort: "field", sort_dir: "DESC" as any }, { sort_dir: "desc" }],
+      [{ filter: null }, { filter: null }],
+      [{ filter: undefined }, { filter: null }],
+      [{ filter: "" }, { filter: null }],
+      [{ filter: 0 as any }, { filter: "0" }],
+      [{ filter: -1 }, { filter: "-1" }],
+      [{ filter: 5.5 }, { filter: "5.5" }],
+      [{ filter: true }, { filter: "true" }],
+      [{ filter: false }, { filter: "false" }],
+      [{ filter: {} }, { filter: "[object Object]" }],
+      [{ filter: "field" }, { filter: "field" }],
+    ];
+
+  test.each(arrange)(
+    "%# - when page params = %p should set page params = %p ",
+    (input, expected) => {
+      const result = new SearchParams(input);
+      expect(result).toMatchObject(expected);
+    }
+  );
+});
